@@ -279,8 +279,12 @@
     </div>
 
     <div class="actions">
-      <a class="btn" id="contactBtn" href="./james.vcf">Add James to contacts</a>
-      <button class="btn secondary" id="helpBtn" type="button">Having trouble?</button>
+      <a class="btn" id="contactBtn" href="./james.vcf" download>Add James to contacts</a>
+
+      <a class="btn secondary" id="joinBtn"
+         href="WIFI:T:WPA;S:billard_guest;P:guest-2026!;;">
+        Join Wi-Fi
+      </a>
     </div>
 
     <div id="instructions" class="instructions" role="region" aria-label="Instructions">
@@ -304,7 +308,6 @@
     const STORAGE_LANG_KEY = "wifi_page_lang";
     const STORAGE_THEME_KEY = "wifi_page_theme"; // auto | light | dark
 
-    // Flags: tiny SVG data URIs (no extra files)
     const flags = {
       en: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
@@ -342,7 +345,7 @@
         network: "Network:",
         trust: "Guest network only. No access to private devices.",
         contact: "Add James to contacts",
-        help: "Having trouble?",
+        join: "Join Wi-Fi",
         how: "How to join",
         iphone: "iPhone: Tap and hold the QR code, then tap Join Wi-Fi",
         android: "Android: Tap the QR code (or it may connect automatically)",
@@ -355,7 +358,7 @@
         network: "Red:",
         trust: "Red de invitados solamente. Sin acceso a dispositivos privados.",
         contact: "Agregar a James a contactos",
-        help: "¿Problemas?",
+        join: "Conectarse al Wi-Fi",
         how: "Cómo conectarse",
         iphone: "iPhone: Mantén presionado el QR y toca Unirse a Wi-Fi",
         android: "Android: Toca el QR (puede conectarse automáticamente)",
@@ -368,7 +371,7 @@
         network: "Réseau :",
         trust: "Réseau invité uniquement. Aucun accès aux appareils privés.",
         contact: "Ajouter James aux contacts",
-        help: "Un problème ?",
+        join: "Se connecter au Wi-Fi",
         how: "Comment se connecter",
         iphone: "iPhone : Maintiens le QR puis touche Rejoindre le Wi-Fi",
         android: "Android : Touche le QR (connexion parfois automatique)",
@@ -401,14 +404,12 @@
       document.getElementById("houseSub").textContent = t.sub;
 
       document.getElementById("networkLabel").textContent = t.network;
-
       document.getElementById("trustNote").textContent = t.trust;
 
       document.getElementById("contactBtn").textContent = t.contact;
-      document.getElementById("helpBtn").textContent = t.help;
+      document.getElementById("joinBtn").textContent = t.join;
 
       document.getElementById("howTitle").textContent = t.how;
-
       document.getElementById("iphoneText").textContent = t.iphone;
       document.getElementById("androidText").textContent = t.android;
       document.getElementById("backupNote").textContent = t.backup;
@@ -421,7 +422,6 @@
       return languages[(idx + 1) % languages.length];
     }
 
-    // Theme icons as inline SVG paths (no emojis)
     const themeIcons = {
       auto: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 4v16a8 8 0 0 0 0-16Z"/>',
       light: '<path d="M12 18a6 6 0 1 1 6-6 6 6 0 0 1-6 6Zm0-16h0Zm0 2a1 1 0 0 1-1-1V2a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1Zm0 19a1 1 0 0 1-1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1ZM22 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2ZM3 13H2a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2Zm16.95 6.36a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM6.17 7.58a1 1 0 0 1-1.41 0l-.71-.71A1 1 0 0 1 5.46 5.45l.71.71a1 1 0 0 1 0 1.42Zm13.07-1.42-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 1.41ZM6.17 18.24l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 1 1 1.41 1.41Z"/>',
@@ -432,7 +432,7 @@
       if (theme === "light" || theme === "dark") {
         document.documentElement.setAttribute("data-theme", theme);
       } else {
-        document.documentElement.removeAttribute("data-theme"); // auto
+        document.documentElement.removeAttribute("data-theme");
         theme = "auto";
       }
 
@@ -479,13 +479,6 @@
     document.getElementById("themeToggle").addEventListener("click", () => {
       currentTheme = cycleTheme(currentTheme);
       currentTheme = applyTheme(currentTheme);
-    });
-
-    document.getElementById("helpBtn").addEventListener("click", () => {
-      const el = document.getElementById("instructions");
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      el.classList.add("highlight");
-      setTimeout(() => el.classList.remove("highlight"), 800);
     });
   </script>
 </body>
