@@ -280,6 +280,7 @@
 
     <div class="actions">
       <a class="btn" id="contactBtn" href="./james.vcf">Add James to contacts</a>
+      <button class="btn secondary" id="helpBtn" type="button">Having trouble?</button>
     </div>
 
     <div id="instructions" class="instructions" role="region" aria-label="Instructions">
@@ -478,6 +479,13 @@
     document.getElementById("themeToggle").addEventListener("click", () => {
       currentTheme = cycleTheme(currentTheme);
       currentTheme = applyTheme(currentTheme);
+    });
+    
+     document.getElementById("helpBtn").addEventListener("click", () => {
+      const el = document.getElementById("instructions");
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.add("highlight");
+      setTimeout(() => el.classList.remove("highlight"), 800);
     });
   </script>
 </body>
