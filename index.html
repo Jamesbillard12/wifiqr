@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Join Wi-Fi</title>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Join Wi-Fi</title>
+</head>
 
-  <body
+<body
+  style="
+    margin: 0;
+    padding: 40px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    text-align: center;
+    line-height: 1.4;
+    background: #ffffff;
+    color: #000000;
+  "
+>
+  <h2 style="margin: 0 0 10px; font-size: 22px;">Join our Wi-Fi</h2>
+
+  <img
+    src="./wifi-qr.png"
+    alt="Wi-Fi QR code"
     style="
-      margin: 0;
-      padding: 40px 16px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-      text-align: center;
-      line-height: 1.35;
+      width: min(320px, 90vw);
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      margin-top: 16px;
     "
-  >
-    <h2 style="margin: 0 0 10px; font-size: 22px;">Join our Wi-Fi</h2>
-    <p style="margin: 0 0 18px; font-size: 15px; opacity: 0.8;">
-      Open your camera and scan the code below.
-    </p>
+  />
 
-    <img
-      src="./wifi-qr.png"
-      alt="Wi-Fi QR code"
-      style="
-        width: min(320px, 90vw);
-        height: auto;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      "
-    />
+  <div style="margin-top: 18px; font-size: 14px; color: #555;">
 
-    <p style="margin: 18px 0 0; font-size: 14px; opacity: 0.7;">
-      If scanning does not pop up, save the image to Photos and scan from there.
-    </p>
-  </body>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+      <!-- Apple icon -->
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="black" aria-hidden="true">
+        <path d="M16.365 1.43c0 1.14-.465 2.26-1.242 3.07-.8.83-2.02 1.46-3.16 1.36-.13-1.12.4-2.32 1.16-3.12.78-.86 2.13-1.51 3.24-1.31zm3.17 17.02c-.52 1.17-.76 1.7-1.43 2.74-.93 1.42-2.23 3.18-3.86 3.19-1.44.02-1.81-.94-3.77-.93-1.96.01-2.37.95-3.8.94-1.64-.02-2.9-1.6-3.83-3.02-2.62-4.01-2.89-8.72-1.28-11.2 1.14-1.77 2.95-2.8 4.66-2.8 1.74 0 2.83.95 4.26.95 1.39 0 2.24-.96 4.25-.96 1.53 0 3.16.83 4.3 2.26-3.8 2.08-3.19 7.49.5 8.83z"/>
+      </svg>
+      <span><strong>iPhone:</strong> Tap and hold the QR code, then tap <em>Join Wi-Fi</em></span>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;">
+      <!-- Android icon -->
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="black" aria-hidden="true">
+        <path d="M17.6 9.48l1.84-3.18a.5.5 0 0 0-.18-.68.5.5 0 0 0-.68.18l-1.88 3.25a7.98 7.98 0 0 0-3.7-.92 7.98 7.98 0 0 0-3.7.92L7.42 5.8a.5.5 0 1 0-.86.5l1.84 3.18A8.06 8.06 0 0 0 4 16.5h16a8.06 8.06 0 0 0-2.4-7.02zM9.5 14a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zm5 0a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z"/>
+      </svg>
+      <span><strong>Android:</strong> Tap the QR code (or it may connect automatically)</span>
+    </div>
+
+  </div>
+
+</body>
 </html>
