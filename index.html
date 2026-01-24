@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Join Wi-Fi</title>
+  <title>Billard House Wi-Fi</title>
 
   <style>
     :root {
@@ -18,6 +18,8 @@
       --btn: #111111;
       --btnText: #ffffff;
       --iconFilter: none;
+      --pill: #f1f3f5;
+      --highlight: rgba(255, 214, 102, 0.55);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -33,10 +35,13 @@
         --btn: #f3f5f7;
         --btnText: #0b0d12;
         --iconFilter: invert(1);
+        --pill: #0f1320;
+        --highlight: rgba(255, 214, 102, 0.25);
       }
     }
 
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -52,20 +57,66 @@
 
     .card {
       width: 100%;
-      max-width: 380px;
+      max-width: 390px;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 22px;
       box-shadow: 0 14px 34px var(--shadow);
-      padding: 22px 18px 18px;
+      padding: 18px;
       text-align: center;
     }
 
-    h1 { margin: 0 0 10px; font-size: 22px; }
-    .sub { margin: 0 0 14px; color: var(--muted2); font-size: 14px; }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.2px; }
+    .sub { font-size: 13px; color: var(--muted2); margin-top: 2px; }
+
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .lang-btn:active { transform: translateY(1px); }
+
+    .flag {
+      width: 18px;
+      height: 12px;
+      display: block;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px var(--border);
+    }
+
+    .pill {
+      margin: 12px auto 0;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      background: var(--pill);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pill strong { color: var(--text); }
 
     .qr-wrapper {
-      margin: 12px auto;
+      margin: 14px auto 10px;
       padding: 14px;
       border-radius: 18px;
       background: var(--qrbg);
@@ -79,6 +130,12 @@
       background: #fff;
     }
 
+    .trust {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted2);
+    }
+
     .actions {
       margin-top: 14px;
       display: grid;
@@ -86,17 +143,16 @@
     }
 
     .btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
       padding: 12px;
       border-radius: 14px;
       background: var(--btn);
       color: var(--btnText);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 800;
       font-size: 15px;
+      border: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn.secondary {
@@ -105,17 +161,22 @@
       color: var(--text);
     }
 
+    .btn:active { transform: translateY(1px); }
+
     .instructions {
       margin-top: 14px;
       font-size: 14px;
       color: var(--muted);
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
     }
 
     .row {
-      margin-top: 8px;
+      margin-top: 10px;
       display: flex;
-      justify-content: center;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
     }
 
@@ -123,56 +184,199 @@
       width: 16px;
       height: 16px;
       filter: var(--iconFilter);
+      flex: 0 0 auto;
     }
 
-    .footer {
-      margin-top: 14px;
-      font-size: 12px;
-      color: var(--muted2);
+    .highlight {
+      box-shadow: 0 0 0 6px var(--highlight);
+      transition: box-shadow 300ms ease;
     }
   </style>
 </head>
 
 <body>
   <div class="card">
-    <h1>Join our Wi-Fi</h1>
-    <div class="sub">Scan the code or use the button below</div>
+    <div class="top">
+      <div>
+        <h1 id="houseTitle">Billard House Wi-Fi</h1>
+        <div class="sub" id="houseSub">Tap the QR or use the buttons</div>
+      </div>
+
+      <button class="lang-btn" id="langToggle" type="button" aria-label="Change language">
+        <img class="flag" id="langFlag" alt="Language flag" />
+        <span id="langCode">EN</span>
+      </button>
+    </div>
+
+    <div class="pill">
+      <span id="networkLabel">Network:</span>
+      <strong id="networkName">billard_guest</strong>
+    </div>
 
     <div class="qr-wrapper">
-      <img src="./wifi-guest-qr.png" alt="Wi-Fi QR code">
+      <img src="./wifi-guest-qr.png" alt="Wi-Fi QR">
+    </div>
+
+    <div class="trust" id="trustNote">
+      Guest network only. No access to private devices.
     </div>
 
     <div class="actions">
-      <a class="btn" href="./james.vcf">
-        Add James to contacts
-      </a>
-
-      <a class="btn secondary" href="#instructions">
-        Show QR instructions
-      </a>
+      <a class="btn" id="contactBtn" href="./james.vcf">Add James to contacts</a>
+      <button class="btn secondary" id="helpBtn" type="button">Having trouble?</button>
     </div>
 
-    <div id="instructions" class="instructions">
+    <div id="instructions" class="instructions" role="region" aria-label="Instructions">
+      <strong id="howTitle">How to join</strong>
+
       <div class="row">
-        <img
-          class="platform-icon"
-          src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg"
-          alt="Apple"
-        >
-        <strong>iPhone:</strong> Tap and hold → Join Wi-Fi
+        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg" alt="Apple">
+        <div id="iphoneText"></div>
       </div>
 
       <div class="row">
-        <img
-          class="platform-icon"
-          src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/android.svg"
-          alt="Android"
-        >
-        <strong>Android:</strong> Tap QR (may auto-connect)
+        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/android.svg" alt="Android">
+        <div id="androidText"></div>
       </div>
-    </div>
 
-    <div class="footer">Guest network only</div>
+      <div class="row" id="backupNote"></div>
+    </div>
   </div>
+
+  <script>
+    const STORAGE_KEY = "wifi_page_lang";
+
+    // Flags: tiny SVG data URIs (no extra files)
+    const flags = {
+      en: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
+          <rect width="18" height="12" fill="#012169"/>
+          <path d="M0 0 L18 12 M18 0 L0 12" stroke="#FFF" stroke-width="2.6"/>
+          <path d="M0 0 L18 12 M18 0 L0 12" stroke="#C8102E" stroke-width="1.2"/>
+          <rect x="7" width="4" height="12" fill="#FFF"/>
+          <rect y="4" width="18" height="4" fill="#FFF"/>
+          <rect x="7.6" width="2.8" height="12" fill="#C8102E"/>
+          <rect y="4.6" width="18" height="2.8" fill="#C8102E"/>
+        </svg>
+      `),
+      es: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
+          <rect width="18" height="12" fill="#AA151B"/>
+          <rect y="3" width="18" height="6" fill="#F1BF00"/>
+        </svg>
+      `),
+      fr: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
+          <rect width="6" height="12" x="0" fill="#0055A4"/>
+          <rect width="6" height="12" x="6" fill="#FFFFFF"/>
+          <rect width="6" height="12" x="12" fill="#EF4135"/>
+        </svg>
+      `)
+    };
+
+    const languages = ["en", "es", "fr"];
+
+    const strings = {
+      en: {
+        code: "EN",
+        title: "Billard House Wi-Fi",
+        sub: "Tap the QR or use the buttons",
+        network: "Network:",
+        trust: "Guest network only. No access to private devices.",
+        contact: "Add James to contacts",
+        help: "Having trouble?",
+        how: "How to join",
+        iphone: "iPhone: Tap and hold the QR code, then tap Join Wi-Fi",
+        android: "Android: Tap the QR code (or it may connect automatically)",
+        backup: "If nothing pops up, save the image and scan from Photos."
+      },
+      es: {
+        code: "ES",
+        title: "Wi-Fi Casa Billard",
+        sub: "Escanea el QR o usa los botones",
+        network: "Red:",
+        trust: "Red de invitados solamente. Sin acceso a dispositivos privados.",
+        contact: "Agregar a James a contactos",
+        help: "¿Problemas?",
+        how: "Cómo conectarse",
+        iphone: "iPhone: Mantén presionado el QR y toca Unirse a Wi-Fi",
+        android: "Android: Toca el QR (puede conectarse automáticamente)",
+        backup: "Si no aparece nada, guarda la imagen y escanéala desde Fotos."
+      },
+      fr: {
+        code: "FR",
+        title: "Wi-Fi Maison Billard",
+        sub: "Scanne le QR ou utilise les boutons",
+        network: "Réseau :",
+        trust: "Réseau invité uniquement. Aucun accès aux appareils privés.",
+        contact: "Ajouter James aux contacts",
+        help: "Un problème ?",
+        how: "Comment se connecter",
+        iphone: "iPhone : Maintiens le QR puis touche Rejoindre le Wi-Fi",
+        android: "Android : Touche le QR (connexion parfois automatique)",
+        backup: "Si rien ne s’affiche, enregistre l’image et scanne depuis Photos."
+      }
+    };
+
+    function detectDeviceLanguage() {
+      const navLang = (navigator.language || "en").toLowerCase();
+      if (navLang.startsWith("es")) return "es";
+      if (navLang.startsWith("fr")) return "fr";
+      return "en";
+    }
+
+    function getInitialLanguage() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved && languages.includes(saved)) return saved;
+      return detectDeviceLanguage();
+    }
+
+    function setLanguage(lang) {
+      const t = strings[lang];
+
+      document.documentElement.lang = lang;
+
+      document.getElementById("langCode").textContent = t.code;
+      document.getElementById("langFlag").src = flags[lang];
+
+      document.getElementById("houseTitle").textContent = t.title;
+      document.getElementById("houseSub").textContent = t.sub;
+
+      document.getElementById("networkLabel").textContent = t.network;
+
+      document.getElementById("trustNote").textContent = t.trust;
+
+      document.getElementById("contactBtn").textContent = t.contact;
+      document.getElementById("helpBtn").textContent = t.help;
+
+      document.getElementById("howTitle").textContent = t.how;
+
+      document.getElementById("iphoneText").textContent = t.iphone;
+      document.getElementById("androidText").textContent = t.android;
+      document.getElementById("backupNote").textContent = t.backup;
+
+      localStorage.setItem(STORAGE_KEY, lang);
+    }
+
+    function cycleLanguage(current) {
+      const idx = languages.indexOf(current);
+      return languages[(idx + 1) % languages.length];
+    }
+
+    let currentLang = getInitialLanguage();
+    setLanguage(currentLang);
+
+    document.getElementById("langToggle").addEventListener("click", () => {
+      currentLang = cycleLanguage(currentLang);
+      setLanguage(currentLang);
+    });
+
+    document.getElementById("helpBtn").addEventListener("click", () => {
+      const el = document.getElementById("instructions");
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.add("highlight");
+      setTimeout(() => el.classList.remove("highlight"), 800);
+    });
+  </script>
 </body>
 </html>
