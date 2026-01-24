@@ -44,6 +44,7 @@
       }
     }
 
+    /* Manual override (Light/Dark) using html[data-theme] */
     html[data-theme="light"] {
       --bg: #f3f5f7;
       --card: #ffffff;
@@ -132,6 +133,8 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    .pill-btn:active { transform: translateY(1px); }
+
     .flag {
       width: 18px;
       height: 12px;
@@ -203,6 +206,14 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn:active { transform: translateY(1px); }
+
     .instructions {
       margin-top: 14px;
       font-size: 14px;
@@ -226,6 +237,11 @@
       filter: var(--iconFilter);
       flex: 0 0 auto;
     }
+
+    .highlight {
+      box-shadow: 0 0 0 6px var(--highlight);
+      transition: box-shadow 300ms ease;
+    }
   </style>
 </head>
 
@@ -238,20 +254,20 @@
       </div>
 
       <div class="top-actions">
-        <button class="pill-btn" id="langToggle" type="button">
-          <img class="flag" id="langFlag" />
+        <button class="pill-btn" id="langToggle" type="button" aria-label="Change language">
+          <img class="flag" id="langFlag" alt="Language flag" />
           <span id="langCode">EN</span>
         </button>
 
-        <button class="pill-btn" id="themeToggle" type="button">
-          <svg class="theme-icon" id="themeIcon" viewBox="0 0 24 24"></svg>
+        <button class="pill-btn" id="themeToggle" type="button" aria-label="Change theme" title="Theme">
+          <svg class="theme-icon" id="themeIcon" viewBox="0 0 24 24" aria-hidden="true"></svg>
         </button>
       </div>
     </div>
 
     <div class="pill">
       <span id="networkLabel">Network:</span>
-      <strong>billard_guest</strong>
+      <strong id="networkName">billard_guest</strong>
     </div>
 
     <div class="qr-wrapper">
@@ -263,19 +279,20 @@
     </div>
 
     <div class="actions">
-      <a class="btn" id="contactBtn" href="./james.vcf" download>Add James to contacts</a>
+      <a class="btn" id="contactBtn" href="./james.vcf">Add James to contacts</a>
+      <button class="btn secondary" id="helpBtn" type="button">Having trouble?</button>
     </div>
 
-    <div class="instructions">
+    <div id="instructions" class="instructions" role="region" aria-label="Instructions">
       <strong id="howTitle">How to join</strong>
 
       <div class="row">
-        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg">
+        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg" alt="Apple">
         <div id="iphoneText"></div>
       </div>
 
       <div class="row">
-        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/android.svg">
+        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/android.svg" alt="Android">
         <div id="androidText"></div>
       </div>
 
@@ -283,38 +300,193 @@
     </div>
   </div>
 
-<script>
-const languages = ["en","es","fr"];
+  <script>
+    const STORAGE_LANG_KEY = "wifi_page_lang";
+    const STORAGE_THEME_KEY = "wifi_page_theme"; // auto | light | dark
 
-const strings = {
-  en:{code:"EN",title:"Billard House Wi-Fi",sub:"Tap the QR or use the buttons",network:"Network:",trust:"Guest network only. No access to private devices.",contact:"Add James to contacts",how:"How to join",iphone:"iPhone: Tap and hold the QR code, then tap Join Wi-Fi",android:"Android: Tap the QR code (or it may connect automatically)",backup:"If nothing pops up, save the image and scan from Photos."},
-  es:{code:"ES",title:"Wi-Fi Casa Billard",sub:"Escanea el QR o usa los botones",network:"Red:",trust:"Red de invitados solamente.",contact:"Agregar a James a contactos",how:"Cómo conectarse",iphone:"Mantén presionado el QR y toca Unirse",android:"Toca el QR",backup:"Guarda la imagen si es necesario."},
-  fr:{code:"FR",title:"Wi-Fi Maison Billard",sub:"Scanne le QR ou utilise les boutons",network:"Réseau :",trust:"Réseau invité uniquement.",contact:"Ajouter James aux contacts",how:"Comment se connecter",iphone:"Maintiens le QR puis touche Rejoindre",android:"Touche le QR",backup:"Enregistre l’image si nécessaire."}
-};
+    // Flags: tiny SVG data URIs (no extra files)
+    const flags = {
+      en: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
+          <rect width="18" height="12" fill="#012169"/>
+          <path d="M0 0 L18 12 M18 0 L0 12" stroke="#FFF" stroke-width="2.6"/>
+          <path d="M0 0 L18 12 M18 0 L0 12" stroke="#C8102E" stroke-width="1.2"/>
+          <rect x="7" width="4" height="12" fill="#FFF"/>
+          <rect y="4" width="18" height="4" fill="#FFF"/>
+          <rect x="7.6" width="2.8" height="12" fill="#C8102E"/>
+          <rect y="4.6" width="18" height="2.8" fill="#C8102E"/>
+        </svg>
+      `),
+      es: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
+          <rect width="18" height="12" fill="#AA151B"/>
+          <rect y="3" width="18" height="6" fill="#F1BF00"/>
+        </svg>
+      `),
+      fr: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
+          <rect width="6" height="12" x="0" fill="#0055A4"/>
+          <rect width="6" height="12" x="6" fill="#FFFFFF"/>
+          <rect width="6" height="12" x="12" fill="#EF4135"/>
+        </svg>
+      `)
+    };
 
-let currentLang = localStorage.getItem("wifi_lang") || "en";
+    const languages = ["en", "es", "fr"];
 
-function setLanguage(lang){
-  const t=strings[lang];
-  document.getElementById("langCode").textContent=t.code;
-  document.getElementById("houseTitle").textContent=t.title;
-  document.getElementById("houseSub").textContent=t.sub;
-  document.getElementById("networkLabel").textContent=t.network;
-  document.getElementById("trustNote").textContent=t.trust;
-  document.getElementById("contactBtn").textContent=t.contact;
-  document.getElementById("howTitle").textContent=t.how;
-  document.getElementById("iphoneText").textContent=t.iphone;
-  document.getElementById("androidText").textContent=t.android;
-  document.getElementById("backupNote").textContent=t.backup;
-  localStorage.setItem("wifi_lang",lang);
-}
+    const strings = {
+      en: {
+        code: "EN",
+        title: "Billard House Wi-Fi",
+        sub: "Tap the QR or use the buttons",
+        network: "Network:",
+        trust: "Guest network only. No access to private devices.",
+        contact: "Add James to contacts",
+        help: "Having trouble?",
+        how: "How to join",
+        iphone: "iPhone: Tap and hold the QR code, then tap Join Wi-Fi",
+        android: "Android: Tap the QR code (or it may connect automatically)",
+        backup: "If nothing pops up, save the image and scan from Photos."
+      },
+      es: {
+        code: "ES",
+        title: "Wi-Fi Casa Billard",
+        sub: "Escanea el QR o usa los botones",
+        network: "Red:",
+        trust: "Red de invitados solamente. Sin acceso a dispositivos privados.",
+        contact: "Agregar a James a contactos",
+        help: "¿Problemas?",
+        how: "Cómo conectarse",
+        iphone: "iPhone: Mantén presionado el QR y toca Unirse a Wi-Fi",
+        android: "Android: Toca el QR (puede conectarse automáticamente)",
+        backup: "Si no aparece nada, guarda la imagen y escanéala desde Fotos."
+      },
+      fr: {
+        code: "FR",
+        title: "Wi-Fi Maison Billard",
+        sub: "Scanne le QR ou utilise les boutons",
+        network: "Réseau :",
+        trust: "Réseau invité uniquement. Aucun accès aux appareils privés.",
+        contact: "Ajouter James aux contacts",
+        help: "Un problème ?",
+        how: "Comment se connecter",
+        iphone: "iPhone : Maintiens le QR puis touche Rejoindre le Wi-Fi",
+        android: "Android : Touche le QR (connexion parfois automatique)",
+        backup: "Si rien ne s’affiche, enregistre l’image et scanne depuis Photos."
+      }
+    };
 
-document.getElementById("langToggle").onclick=()=>{
-  currentLang=languages[(languages.indexOf(currentLang)+1)%languages.length];
-  setLanguage(currentLang);
-};
+    function detectDeviceLanguage() {
+      const navLang = (navigator.language || "en").toLowerCase();
+      if (navLang.startsWith("es")) return "es";
+      if (navLang.startsWith("fr")) return "fr";
+      return "en";
+    }
 
-setLanguage(currentLang);
-</script>
+    function getInitialLanguage() {
+      const saved = localStorage.getItem(STORAGE_LANG_KEY);
+      if (saved && languages.includes(saved)) return saved;
+      return detectDeviceLanguage();
+    }
+
+    function setLanguage(lang) {
+      const t = strings[lang];
+
+      document.documentElement.lang = lang;
+
+      document.getElementById("langCode").textContent = t.code;
+      document.getElementById("langFlag").src = flags[lang];
+
+      document.getElementById("houseTitle").textContent = t.title;
+      document.getElementById("houseSub").textContent = t.sub;
+
+      document.getElementById("networkLabel").textContent = t.network;
+
+      document.getElementById("trustNote").textContent = t.trust;
+
+      document.getElementById("contactBtn").textContent = t.contact;
+      document.getElementById("helpBtn").textContent = t.help;
+
+      document.getElementById("howTitle").textContent = t.how;
+
+      document.getElementById("iphoneText").textContent = t.iphone;
+      document.getElementById("androidText").textContent = t.android;
+      document.getElementById("backupNote").textContent = t.backup;
+
+      localStorage.setItem(STORAGE_LANG_KEY, lang);
+    }
+
+    function cycleLanguage(current) {
+      const idx = languages.indexOf(current);
+      return languages[(idx + 1) % languages.length];
+    }
+
+    // Theme icons as inline SVG paths (no emojis)
+    const themeIcons = {
+      auto: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 4v16a8 8 0 0 0 0-16Z"/>',
+      light: '<path d="M12 18a6 6 0 1 1 6-6 6 6 0 0 1-6 6Zm0-16h0Zm0 2a1 1 0 0 1-1-1V2a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1Zm0 19a1 1 0 0 1-1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1ZM22 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2ZM3 13H2a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2Zm16.95 6.36a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM6.17 7.58a1 1 0 0 1-1.41 0l-.71-.71A1 1 0 0 1 5.46 5.45l.71.71a1 1 0 0 1 0 1.42Zm13.07-1.42-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 1.41ZM6.17 18.24l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 1 1 1.41 1.41Z"/>',
+      dark: '<path d="M21 14.5A8.5 8.5 0 0 1 9.5 3a.75.75 0 0 0-.86-.86A10 10 0 1 0 21.86 15.36a.75.75 0 0 0-.86-.86Z"/>'
+    };
+
+    function applyTheme(theme) {
+      if (theme === "light" || theme === "dark") {
+        document.documentElement.setAttribute("data-theme", theme);
+      } else {
+        document.documentElement.removeAttribute("data-theme"); // auto
+        theme = "auto";
+      }
+
+      localStorage.setItem(STORAGE_THEME_KEY, theme);
+      updateThemeButton(theme);
+      return theme;
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById("themeIcon");
+      icon.innerHTML = themeIcons[theme] || themeIcons.auto;
+
+      const btn = document.getElementById("themeToggle");
+      const label = theme === "light" ? "Light theme"
+        : theme === "dark" ? "Dark theme"
+        : "Auto theme";
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+    }
+
+    function getInitialTheme() {
+      const saved = localStorage.getItem(STORAGE_THEME_KEY);
+      if (saved === "light" || saved === "dark" || saved === "auto") return saved;
+      return "auto";
+    }
+
+    function cycleTheme(current) {
+      if (current === "auto") return "light";
+      if (current === "light") return "dark";
+      return "auto";
+    }
+
+    // Init
+    let currentLang = getInitialLanguage();
+    setLanguage(currentLang);
+
+    let currentTheme = applyTheme(getInitialTheme());
+
+    document.getElementById("langToggle").addEventListener("click", () => {
+      currentLang = cycleLanguage(currentLang);
+      setLanguage(currentLang);
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      currentTheme = cycleTheme(currentTheme);
+      currentTheme = applyTheme(currentTheme);
+    });
+
+    document.getElementById("helpBtn").addEventListener("click", () => {
+      const el = document.getElementById("instructions");
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.add("highlight");
+      setTimeout(() => el.classList.remove("highlight"), 800);
+    });
+  </script>
 </body>
 </html>
