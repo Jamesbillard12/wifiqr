@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <link rel="icon" type="image/png" sizes="50x50" href="./icons8-wifi-50.png">
   <link rel="icon" type="image/png" sizes="100x100" href="./icons8-wifi-100.png">
+
   <title>Billard House Wi-Fi</title>
 
   <style>
@@ -40,6 +42,39 @@
         --pill: #0f1320;
         --highlight: rgba(255, 214, 102, 0.25);
       }
+    }
+
+    /* Manual override (Light/Dark) using html[data-theme] */
+    html[data-theme="light"] {
+      --bg: #f3f5f7;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #4a4a4a;
+      --muted2: #7a7a7a;
+      --border: #e6e6e6;
+      --shadow: rgba(0,0,0,.12);
+      --qrbg: #fafafa;
+      --btn: #111111;
+      --btnText: #ffffff;
+      --iconFilter: none;
+      --pill: #f1f3f5;
+      --highlight: rgba(255, 214, 102, 0.55);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0b0d12;
+      --card: #141824;
+      --text: #f3f5f7;
+      --muted: #c9d1d9;
+      --muted2: #9aa4af;
+      --border: #273041;
+      --shadow: rgba(0,0,0,.45);
+      --qrbg: #0f1320;
+      --btn: #f3f5f7;
+      --btnText: #0b0d12;
+      --iconFilter: invert(1);
+      --pill: #0f1320;
+      --highlight: rgba(255, 214, 102, 0.25);
     }
 
     * { box-sizing: border-box; }
@@ -78,7 +113,13 @@
     h1 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.2px; }
     .sub { font-size: 13px; color: var(--muted2); margin-top: 2px; }
 
-    .lang-btn {
+    .top-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .pill-btn {
       border: 1px solid var(--border);
       background: transparent;
       color: var(--text);
@@ -92,7 +133,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .lang-btn:active { transform: translateY(1px); }
+    .pill-btn:active { transform: translateY(1px); }
 
     .flag {
       width: 18px;
@@ -100,6 +141,14 @@
       display: block;
       border-radius: 2px;
       box-shadow: 0 0 0 1px var(--border);
+    }
+
+    .theme-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      fill: currentColor;
+      opacity: 0.95;
     }
 
     .pill {
@@ -204,10 +253,16 @@
         <div class="sub" id="houseSub">Tap the QR or use the buttons</div>
       </div>
 
-      <button class="lang-btn" id="langToggle" type="button" aria-label="Change language">
-        <img class="flag" id="langFlag" alt="Language flag" />
-        <span id="langCode">EN</span>
-      </button>
+      <div class="top-actions">
+        <button class="pill-btn" id="langToggle" type="button" aria-label="Change language">
+          <img class="flag" id="langFlag" alt="Language flag" />
+          <span id="langCode">EN</span>
+        </button>
+
+        <button class="pill-btn" id="themeToggle" type="button" aria-label="Change theme" title="Theme">
+          <svg class="theme-icon" id="themeIcon" viewBox="0 0 24 24" aria-hidden="true"></svg>
+        </button>
+      </div>
     </div>
 
     <div class="pill">
@@ -246,7 +301,8 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "wifi_page_lang";
+    const STORAGE_LANG_KEY = "wifi_page_lang";
+    const STORAGE_THEME_KEY = "wifi_page_theme"; // auto | light | dark
 
     // Flags: tiny SVG data URIs (no extra files)
     const flags = {
@@ -328,7 +384,7 @@
     }
 
     function getInitialLanguage() {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_LANG_KEY);
       if (saved && languages.includes(saved)) return saved;
       return detectDeviceLanguage();
     }
@@ -357,7 +413,7 @@
       document.getElementById("androidText").textContent = t.android;
       document.getElementById("backupNote").textContent = t.backup;
 
-      localStorage.setItem(STORAGE_KEY, lang);
+      localStorage.setItem(STORAGE_LANG_KEY, lang);
     }
 
     function cycleLanguage(current) {
@@ -365,12 +421,64 @@
       return languages[(idx + 1) % languages.length];
     }
 
+    // Theme icons as inline SVG paths (no emojis)
+    const themeIcons = {
+      auto: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 4v16a8 8 0 0 0 0-16Z"/>',
+      light: '<path d="M12 18a6 6 0 1 1 6-6 6 6 0 0 1-6 6Zm0-16h0Zm0 2a1 1 0 0 1-1-1V2a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1Zm0 19a1 1 0 0 1-1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1ZM22 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2ZM3 13H2a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2Zm16.95 6.36a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM6.17 7.58a1 1 0 0 1-1.41 0l-.71-.71A1 1 0 0 1 5.46 5.45l.71.71a1 1 0 0 1 0 1.42Zm13.07-1.42-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 1.41ZM6.17 18.24l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 1 1 1.41 1.41Z"/>',
+      dark: '<path d="M21 14.5A8.5 8.5 0 0 1 9.5 3a.75.75 0 0 0-.86-.86A10 10 0 1 0 21.86 15.36a.75.75 0 0 0-.86-.86Z"/>'
+    };
+
+    function applyTheme(theme) {
+      if (theme === "light" || theme === "dark") {
+        document.documentElement.setAttribute("data-theme", theme);
+      } else {
+        document.documentElement.removeAttribute("data-theme"); // auto
+        theme = "auto";
+      }
+
+      localStorage.setItem(STORAGE_THEME_KEY, theme);
+      updateThemeButton(theme);
+      return theme;
+    }
+
+    function updateThemeButton(theme) {
+      const icon = document.getElementById("themeIcon");
+      icon.innerHTML = themeIcons[theme] || themeIcons.auto;
+
+      const btn = document.getElementById("themeToggle");
+      const label = theme === "light" ? "Light theme"
+        : theme === "dark" ? "Dark theme"
+        : "Auto theme";
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+    }
+
+    function getInitialTheme() {
+      const saved = localStorage.getItem(STORAGE_THEME_KEY);
+      if (saved === "light" || saved === "dark" || saved === "auto") return saved;
+      return "auto";
+    }
+
+    function cycleTheme(current) {
+      if (current === "auto") return "light";
+      if (current === "light") return "dark";
+      return "auto";
+    }
+
+    // Init
     let currentLang = getInitialLanguage();
     setLanguage(currentLang);
+
+    let currentTheme = applyTheme(getInitialTheme());
 
     document.getElementById("langToggle").addEventListener("click", () => {
       currentLang = cycleLanguage(currentLang);
       setLanguage(currentLang);
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      currentTheme = cycleTheme(currentTheme);
+      currentTheme = applyTheme(currentTheme);
     });
 
     document.getElementById("helpBtn").addEventListener("click", () => {
