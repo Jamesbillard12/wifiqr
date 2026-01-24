@@ -17,6 +17,7 @@
       --qrbg: #fafafa;
       --btn: #111111;
       --btnText: #ffffff;
+      --iconFilter: none;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -31,6 +32,7 @@
         --qrbg: #0f1320;
         --btn: #f3f5f7;
         --btnText: #0b0d12;
+        --iconFilter: invert(1);
       }
     }
 
@@ -117,6 +119,12 @@
       align-items: center;
     }
 
+    .platform-icon {
+      width: 16px;
+      height: 16px;
+      filter: var(--iconFilter);
+    }
+
     .footer {
       margin-top: 14px;
       font-size: 12px;
@@ -145,8 +153,23 @@
     </div>
 
     <div id="instructions" class="instructions">
-      <div class="row">🍎 <strong>iPhone:</strong> Tap & hold → Join Wi-Fi</div>
-      <div class="row">🤖 <strong>Android:</strong> Tap QR (may auto-connect)</div>
+      <div class="row">
+        <img
+          class="platform-icon"
+          src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg"
+          alt="Apple"
+        >
+        <strong>iPhone:</strong> Tap and hold → Join Wi-Fi
+      </div>
+
+      <div class="row">
+        <img
+          class="platform-icon"
+          src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/android.svg"
+          alt="Android"
+        >
+        <strong>Android:</strong> Tap QR (may auto-connect)
+      </div>
     </div>
 
     <div class="footer">Guest network only</div>
