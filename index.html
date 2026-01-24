@@ -6,73 +6,121 @@
   <title>Join Wi-Fi</title>
 
   <style>
+    :root {
+      --bg: #f3f5f7;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #4a4a4a;
+      --muted2: #7a7a7a;
+      --border: #e6e6e6;
+      --shadow: rgba(0,0,0,.12);
+      --qrbg: #fafafa;
+      --btn: #111111;
+      --btnText: #ffffff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0d12;
+        --card: #141824;
+        --text: #f3f5f7;
+        --muted: #c9d1d9;
+        --muted2: #9aa4af;
+        --border: #273041;
+        --shadow: rgba(0,0,0,.45);
+        --qrbg: #0f1320;
+        --btn: #f3f5f7;
+        --btnText: #0b0d12;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      background: #f3f5f7;
+      align-items: center;
+      background: var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      color: #111;
+      color: var(--text);
+      padding: 16px;
     }
 
     .card {
-      background: #ffffff;
       width: 100%;
-      max-width: 360px;
-      margin: 16px;
-      padding: 24px 20px 22px;
-      border-radius: 20px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      max-width: 380px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 14px 34px var(--shadow);
+      padding: 22px 18px 18px;
       text-align: center;
     }
 
-    h1 {
-      margin: 0 0 14px;
-      font-size: 22px;
-      font-weight: 600;
-    }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .sub { margin: 0 0 14px; color: var(--muted2); font-size: 14px; }
 
     .qr-wrapper {
-      margin: 16px 0 14px;
+      margin: 12px auto;
       padding: 14px;
-      border-radius: 16px;
-      background: #fafafa;
-      box-shadow: inset 0 0 0 1px #e6e6e6;
+      border-radius: 18px;
+      background: var(--qrbg);
+      border: 1px solid var(--border);
     }
 
     .qr-wrapper img {
       width: 100%;
-      max-width: 260px;
-      height: auto;
-      border-radius: 12px;
+      max-width: 270px;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .actions {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--btn);
+      color: var(--btnText);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
     }
 
     .instructions {
       margin-top: 14px;
       font-size: 14px;
-      color: #444;
+      color: var(--muted);
     }
 
     .row {
+      margin-top: 8px;
       display: flex;
-      align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 8px;
-    }
-
-    .icon {
-      width: 16px;
-      height: 16px;
-      display: inline-block;
+      align-items: center;
     }
 
     .footer {
       margin-top: 14px;
       font-size: 12px;
-      color: #888;
+      color: var(--muted2);
     }
   </style>
 </head>
@@ -80,32 +128,28 @@
 <body>
   <div class="card">
     <h1>Join our Wi-Fi</h1>
+    <div class="sub">Scan the code or use the button below</div>
 
     <div class="qr-wrapper">
-      <img src="./wifi-guest-qr.png" alt="Wi-Fi QR code" />
+      <img src="./wifi-qr.png" alt="Wi-Fi QR code">
     </div>
 
-    <div class="instructions">
-      <div class="row">
-        <!-- Apple icon -->
-        <svg class="icon" viewBox="0 0 24 24" fill="#000">
-          <path d="M16.365 1.43c0 1.14-.465 2.26-1.242 3.07-.8.83-2.02 1.46-3.16 1.36-.13-1.12.4-2.32 1.16-3.12.78-.86 2.13-1.51 3.24-1.31zm3.17 17.02c-.52 1.17-.76 1.7-1.43 2.74-.93 1.42-2.23 3.18-3.86 3.19-1.44.02-1.81-.94-3.77-.93-1.96.01-2.37.95-3.8.94-1.64-.02-2.9-1.6-3.83-3.02-2.62-4.01-2.89-8.72-1.28-11.2 1.14-1.77 2.95-2.8 4.66-2.8 1.74 0 2.83.95 4.26.95 1.39 0 2.24-.96 4.25-.96 1.53 0 3.16.83 4.3 2.26-3.8 2.08-3.19 7.49.5 8.83z"/>
-        </svg>
-        <div><strong>iPhone:</strong> Tap and hold → Join Wi-Fi</div>
-      </div>
+    <div class="actions">
+      <a class="btn" href="./james.vcf">
+        Add James to contacts
+      </a>
 
-      <div class="row">
-        <!-- Android icon -->
-        <svg class="icon" viewBox="0 0 24 24" fill="#000">
-          <path d="M17.6 9.48l1.84-3.18a.5.5 0 0 0-.18-.68.5.5 0 0 0-.68.18l-1.88 3.25a7.98 7.98 0 0 0-3.7-.92 7.98 7.98 0 0 0-3.7.92L7.42 5.8a.5.5 0 1 0-.86.5l1.84 3.18A8.06 8.06 0 0 0 4 16.5h16a8.06 8.06 0 0 0-2.4-7.02zM9.5 14a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zm5 0a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z"/>
-        </svg>
-        <div><strong>Android:</strong> Tap QR (may auto-connect)</div>
-      </div>
+      <a class="btn secondary" href="#instructions">
+        Show QR instructions
+      </a>
     </div>
 
-    <div class="footer">
-      Guest network only
+    <div id="instructions" class="instructions">
+      <div class="row">🍎 <strong>iPhone:</strong> Tap & hold → Join Wi-Fi</div>
+      <div class="row">🤖 <strong>Android:</strong> Tap QR (may auto-connect)</div>
     </div>
+
+    <div class="footer">Guest network only</div>
   </div>
 </body>
 </html>
