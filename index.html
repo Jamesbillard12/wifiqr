@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="icon" type="image/png" sizes="50x50" href="./icons8-wifi-50.png">
-  <link rel="icon" type="image/png" sizes="100x100" href="./icons8-wifi-100.png">
+  <link rel="icon" type="image/png" sizes="50x50" href="./icons8-wifi-50.png" />
+  <link rel="icon" type="image/png" sizes="100x100" href="./icons8-wifi-100.png" />
 
   <title>Billard House Wi-Fi</title>
 
@@ -17,13 +17,12 @@
       --muted: #4a4a4a;
       --muted2: #7a7a7a;
       --border: #e6e6e6;
-      --shadow: rgba(0,0,0,.12);
+      --shadow: rgba(0, 0, 0, 0.12);
       --qrbg: #fafafa;
       --btn: #111111;
       --btnText: #ffffff;
       --iconFilter: none;
       --pill: #f1f3f5;
-      --highlight: rgba(255, 214, 102, 0.55);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -34,17 +33,15 @@
         --muted: #c9d1d9;
         --muted2: #9aa4af;
         --border: #273041;
-        --shadow: rgba(0,0,0,.45);
+        --shadow: rgba(0, 0, 0, 0.45);
         --qrbg: #0f1320;
         --btn: #f3f5f7;
         --btnText: #0b0d12;
         --iconFilter: invert(1);
         --pill: #0f1320;
-        --highlight: rgba(255, 214, 102, 0.25);
       }
     }
 
-    /* Manual override (Light/Dark) using html[data-theme] */
     html[data-theme="light"] {
       --bg: #f3f5f7;
       --card: #ffffff;
@@ -52,13 +49,12 @@
       --muted: #4a4a4a;
       --muted2: #7a7a7a;
       --border: #e6e6e6;
-      --shadow: rgba(0,0,0,.12);
+      --shadow: rgba(0, 0, 0, 0.12);
       --qrbg: #fafafa;
       --btn: #111111;
       --btnText: #ffffff;
       --iconFilter: none;
       --pill: #f1f3f5;
-      --highlight: rgba(255, 214, 102, 0.55);
     }
 
     html[data-theme="dark"] {
@@ -68,28 +64,24 @@
       --muted: #c9d1d9;
       --muted2: #9aa4af;
       --border: #273041;
-      --shadow: rgba(0,0,0,.45);
+      --shadow: rgba(0, 0, 0, 0.45);
       --qrbg: #0f1320;
       --btn: #f3f5f7;
       --btnText: #0b0d12;
       --iconFilter: invert(1);
       --pill: #0f1320;
-      --highlight: rgba(255, 214, 102, 0.25);
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: var(--bg);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      color: var(--text);
+      display: grid;
+      place-items: center;
       padding: 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
     .card {
@@ -110,8 +102,13 @@
       gap: 10px;
     }
 
-    h1 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.2px; }
-    .sub { font-size: 13px; color: var(--muted2); margin-top: 2px; }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      text-align: left;
+    }
 
     .top-actions {
       display: flex;
@@ -179,6 +176,8 @@
       max-width: 270px;
       border-radius: 14px;
       background: #fff;
+      display: block;
+      margin: 0 auto;
     }
 
     .trust {
@@ -206,12 +205,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .btn.secondary {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
     .btn:active { transform: translateY(1px); }
 
     .instructions {
@@ -236,11 +229,6 @@
       height: 16px;
       filter: var(--iconFilter);
       flex: 0 0 auto;
-    }
-
-    .highlight {
-      box-shadow: 0 0 0 6px var(--highlight);
-      transition: box-shadow 300ms ease;
     }
   </style>
 </head>
@@ -270,7 +258,7 @@
     </div>
 
     <div class="qr-wrapper">
-      <img src="./wifi-guest-qr.png" alt="Wi-Fi QR">
+      <img src="./wifi-guest-qr.png" alt="Wi-Fi QR code" />
     </div>
 
     <div class="trust" id="trustNote">
@@ -285,12 +273,12 @@
       <strong id="howTitle">How to join</strong>
 
       <div class="row">
-        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg" alt="Apple">
+        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg" alt="Apple" />
         <div id="iphoneText"></div>
       </div>
 
       <div class="row">
-        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/android.svg" alt="Android">
+        <img class="platform-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/android.svg" alt="Android" />
         <div id="androidText"></div>
       </div>
 
@@ -302,9 +290,10 @@
     const STORAGE_LANG_KEY = "wifi_page_lang";
     const STORAGE_THEME_KEY = "wifi_page_theme"; // auto | light | dark
 
-    // Flags: tiny SVG data URIs (no extra files)
+    const languages = ["en", "es", "fr"];
+
     const flags = {
-      en: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+      en: "data:image/svg+xml;utf8," + encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
           <rect width="18" height="12" fill="#012169"/>
           <path d="M0 0 L18 12 M18 0 L0 12" stroke="#FFF" stroke-width="2.6"/>
@@ -315,13 +304,13 @@
           <rect y="4.6" width="18" height="2.8" fill="#C8102E"/>
         </svg>
       `),
-      es: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+      es: "data:image/svg+xml;utf8," + encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
           <rect width="18" height="12" fill="#AA151B"/>
           <rect y="3" width="18" height="6" fill="#F1BF00"/>
         </svg>
       `),
-      fr: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+      fr: "data:image/svg+xml;utf8," + encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12">
           <rect width="6" height="12" x="0" fill="#0055A4"/>
           <rect width="6" height="12" x="6" fill="#FFFFFF"/>
@@ -330,17 +319,13 @@
       `)
     };
 
-    const languages = ["en", "es", "fr"];
-
     const strings = {
       en: {
         code: "EN",
         title: "Billard House Wi-Fi",
-        sub: "Tap the QR or use the buttons",
         network: "Network:",
         trust: "Guest network only. No access to private devices.",
         contact: "Add James to contacts",
-        help: "Having trouble?",
         how: "How to join",
         iphone: "iPhone: Tap and hold the QR code, then tap Join Wi-Fi",
         android: "Android: Tap the QR code (or it may connect automatically)",
@@ -349,30 +334,34 @@
       es: {
         code: "ES",
         title: "Wi-Fi Casa Billard",
-        sub: "Escanea el QR o usa los botones",
         network: "Red:",
-        trust: "Red de invitados solamente. Sin acceso a dispositivos privados.",
+        trust: "Solo red de invitados. Sin acceso a dispositivos privados.",
         contact: "Agregar a James a contactos",
-        help: "¿Problemas?",
         how: "Cómo conectarse",
-        iphone: "iPhone: Mantén presionado el QR y toca Unirse a Wi-Fi",
-        android: "Android: Toca el QR (puede conectarse automáticamente)",
+        iphone: "iPhone: Mantén presionado el código QR y luego toca Unirse a Wi-Fi",
+        android: "Android: Toca el código QR (a veces se conecta automáticamente)",
         backup: "Si no aparece nada, guarda la imagen y escanéala desde Fotos."
       },
       fr: {
         code: "FR",
         title: "Wi-Fi Maison Billard",
-        sub: "Scanne le QR ou utilise les boutons",
         network: "Réseau :",
         trust: "Réseau invité uniquement. Aucun accès aux appareils privés.",
         contact: "Ajouter James aux contacts",
-        help: "Un problème ?",
         how: "Comment se connecter",
-        iphone: "iPhone : Maintiens le QR puis touche Rejoindre le Wi-Fi",
-        android: "Android : Touche le QR (connexion parfois automatique)",
+        iphone: "iPhone : Maintiens le code QR puis touche Rejoindre le Wi-Fi",
+        android: "Android : Touche le code QR (connexion parfois automatique)",
         backup: "Si rien ne s’affiche, enregistre l’image et scanne depuis Photos."
       }
     };
+
+    const themeIcons = {
+      auto: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 4v16a8 8 0 0 0 0-16Z"/>',
+      light: '<path d="M12 18a6 6 0 1 1 6-6 6 6 0 0 1-6 6Zm0-16h0Zm0 2a1 1 0 0 1-1-1V2a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1Zm0 19a1 1 0 0 1-1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1ZM22 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2ZM3 13H2a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2Zm16.95 6.36a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM6.17 7.58a1 1 0 0 1-1.41 0l-.71-.71A1 1 0 0 1 5.46 5.45l.71.71a1 1 0 0 1 0 1.42Zm13.07-1.42-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 1.41ZM6.17 18.24l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 1 1 1.41 1.41Z"/>',
+      dark: '<path d="M21 14.5A8.5 8.5 0 0 1 9.5 3a.75.75 0 0 0-.86-.86A10 10 0 1 0 21.86 15.36a.75.75 0 0 0-.86-.86Z"/>'
+    };
+
+    const $ = (id) => document.getElementById(id);
 
     function detectDeviceLanguage() {
       const navLang = (navigator.language || "en").toLowerCase();
@@ -392,23 +381,19 @@
 
       document.documentElement.lang = lang;
 
-      document.getElementById("langCode").textContent = t.code;
-      document.getElementById("langFlag").src = flags[lang];
+      $("langCode").textContent = t.code;
+      $("langFlag").src = flags[lang];
 
-      document.getElementById("houseTitle").textContent = t.title;
-      document.getElementById("houseSub").textContent = t.sub;
+      $("houseTitle").textContent = t.title;
+      $("networkLabel").textContent = t.network;
+      $("trustNote").textContent = t.trust;
 
-      document.getElementById("networkLabel").textContent = t.network;
+      $("contactBtn").textContent = t.contact;
 
-      document.getElementById("trustNote").textContent = t.trust;
-
-      document.getElementById("contactBtn").textContent = t.contact;
-
-      document.getElementById("howTitle").textContent = t.how;
-
-      document.getElementById("iphoneText").textContent = t.iphone;
-      document.getElementById("androidText").textContent = t.android;
-      document.getElementById("backupNote").textContent = t.backup;
+      $("howTitle").textContent = t.how;
+      $("iphoneText").textContent = t.iphone;
+      $("androidText").textContent = t.android;
+      $("backupNote").textContent = t.backup;
 
       localStorage.setItem(STORAGE_LANG_KEY, lang);
     }
@@ -418,36 +403,29 @@
       return languages[(idx + 1) % languages.length];
     }
 
-    // Theme icons as inline SVG paths (no emojis)
-    const themeIcons = {
-      auto: '<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/><path d="M12 4v16a8 8 0 0 0 0-16Z"/>',
-      light: '<path d="M12 18a6 6 0 1 1 6-6 6 6 0 0 1-6 6Zm0-16h0Zm0 2a1 1 0 0 1-1-1V2a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1Zm0 19a1 1 0 0 1-1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1-1 1ZM22 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2ZM3 13H2a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2Zm16.95 6.36a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 1 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41ZM6.17 7.58a1 1 0 0 1-1.41 0l-.71-.71A1 1 0 0 1 5.46 5.45l.71.71a1 1 0 0 1 0 1.42Zm13.07-1.42-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 0 1 1.41 1.41ZM6.17 18.24l-.71.71a1 1 0 1 1-1.41-1.41l.71-.71a1 1 0 1 1 1.41 1.41Z"/>',
-      dark: '<path d="M21 14.5A8.5 8.5 0 0 1 9.5 3a.75.75 0 0 0-.86-.86A10 10 0 1 0 21.86 15.36a.75.75 0 0 0-.86-.86Z"/>'
-    };
+    function updateThemeButton(theme) {
+      const icon = $("themeIcon");
+      icon.innerHTML = themeIcons[theme] || themeIcons.auto;
+
+      const btn = $("themeToggle");
+      const label = theme === "light" ? "Light theme"
+        : theme === "dark" ? "Dark theme"
+        : "Auto theme";
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+    }
 
     function applyTheme(theme) {
       if (theme === "light" || theme === "dark") {
         document.documentElement.setAttribute("data-theme", theme);
       } else {
-        document.documentElement.removeAttribute("data-theme"); // auto
+        document.documentElement.removeAttribute("data-theme");
         theme = "auto";
       }
 
       localStorage.setItem(STORAGE_THEME_KEY, theme);
       updateThemeButton(theme);
       return theme;
-    }
-
-    function updateThemeButton(theme) {
-      const icon = document.getElementById("themeIcon");
-      icon.innerHTML = themeIcons[theme] || themeIcons.auto;
-
-      const btn = document.getElementById("themeToggle");
-      const label = theme === "light" ? "Light theme"
-        : theme === "dark" ? "Dark theme"
-        : "Auto theme";
-      btn.setAttribute("aria-label", label);
-      btn.setAttribute("title", label);
     }
 
     function getInitialTheme() {
@@ -468,12 +446,12 @@
 
     let currentTheme = applyTheme(getInitialTheme());
 
-    document.getElementById("langToggle").addEventListener("click", () => {
+    $("langToggle").addEventListener("click", () => {
       currentLang = cycleLanguage(currentLang);
       setLanguage(currentLang);
     });
 
-    document.getElementById("themeToggle").addEventListener("click", () => {
+    $("themeToggle").addEventListener("click", () => {
       currentTheme = cycleTheme(currentTheme);
       currentTheme = applyTheme(currentTheme);
     });
